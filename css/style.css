@@ -1,0 +1,19 @@
+﻿.turnplate_box {
+    background-image: url(../images/bg.png);
+    background-size: 100% 100%;
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+.turnplate_box canvas {
+    width: 100%;
+}
+
+.turnplate_box img.pointer {
+    position: absolute;
+    width: 31.5%;
+    height: 42.5%;
+    left: 34.6%;
+    top: 23%;
+}
