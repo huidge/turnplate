@@ -11,7 +11,6 @@
         $.extend(turnplate, options);
 
         var id = new Date().getTime() + '' + Math.floor(Math.random() * 10);
-        console.log(path);
 
         var isRun = false;
         var container = $(selector);
@@ -27,7 +26,9 @@
         turnplate.draw = function (prize, icon) {
             prizeList = (typeof(prize) == 'object') ? prize : [];
             iconList = (typeof(icon) == 'object') ? icon : [];
-            drawRouletteWheel(document.getElementById("canvas_" + id));
+            checkLoad(function () {
+                drawRouletteWheel(document.getElementById("canvas_" + id));
+            });
             return turnplate;
         };
         //抽奖开始
@@ -127,6 +128,11 @@
                             ctx.drawImage(_iconList.losing, -15, 30, 32, 32);
                         } else if (img == 1) {
                             //红包
+                            _iconList.money.onload = function () {
+                                ctx.save();
+                                ctx.drawImage(_iconList.money, -15, 30, 32, 32);
+                                ctx.restore();
+                            }
                             ctx.drawImage(_iconList.money, -15, 30, 32, 32);
                         } else {
                             //默认奖品
@@ -142,12 +148,49 @@
                 }
             }
         };
+        //检测图标加载情况
+        function checkLoad(fun) {
+            var num = 0;
+            var loadNum = 0;
+
+            function check(img) {
+                num++;
+                if (img.complete) {
+                    loadNum++;
+                    checkFinish();
+                } else {
+                    img.onload = function () {
+                        loadNum++;
+                        checkFinish();
+                    };
+                    img.onerror = function () {
+                        loadNum++;
+                        checkFinish();
+                    };
+                }
+            }
+
+            function checkFinish() {
+                if (loadNum >= num) {
+                    typeof (fun) == 'function' && fun();
+                }
+            }
+
+            for (var i = 0; iconList.length > i; i++) {
+                var img = iconList[i];
+                if (typeof (img) == 'object') {
+                    check(img);
+                }
+            }
+            check(_iconList.losing);
+            check(_iconList.award);
+            check(_iconList.money);
+        }
+
         // 动态载入图片
         turnplate.loadImg = function (name) {
-            var img = document.createElement('img');
-            img.style.cssText = "display:none;"
-            img.setAttribute('src', name);
-            container[0].appendChild(img);
+            var img = new Image();
+            img.src = name;
             return img;
         };
         // 动态加载css文件
