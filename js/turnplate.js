@@ -127,12 +127,6 @@
                         } else if (img == 0) {
                             ctx.drawImage(_iconList.losing, -15, 30, 32, 32);
                         } else if (img == 1) {
-                            //红包
-                            _iconList.money.onload = function () {
-                                ctx.save();
-                                ctx.drawImage(_iconList.money, -15, 30, 32, 32);
-                                ctx.restore();
-                            }
                             ctx.drawImage(_iconList.money, -15, 30, 32, 32);
                         } else {
                             //默认奖品
